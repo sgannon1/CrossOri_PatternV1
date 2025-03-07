@@ -56,6 +56,7 @@ function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)
     ZpZcStruct.CDSind_byphase   = CDSind_byphase;
     ZpZcStruct.PDSind_all       = PDSind_all;
     ZpZcStruct.CDSind_all       = CDSind_all;
+
 end
 
 
