@@ -9,6 +9,7 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz)
     
     colors  = getColors;
 
+    figure(655 + iCell)
     for im = 1:nPhas
         scatter(Zc(im,iCell), Zp(im,iCell),sz,colors(im,:),'filled')
         hold on

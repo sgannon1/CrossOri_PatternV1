@@ -11,7 +11,7 @@ function [gratAligned, plaidAligned] = getAlignedGratPlaidTuning(avg_resp_dir, a
     end
     %this allows us to specify that if we are aligning intracellular data,
     %we do not need to shift the plaid resp by 60 degrees, since these
-    %responses are defined by their coherent direction.
+    %responses are defined by their coherent direction
     
     nCells      = size(avg_resp_dir,1);
     nMaskPhas   = size(avg_resp_dir,3);
@@ -32,12 +32,12 @@ function [gratAligned, plaidAligned] = getAlignedGratPlaidTuning(avg_resp_dir, a
         
         if strcmp(aligntype, 'whole-cell')
             for i = 1:nMaskPhas
-                plaidAligned(iCell,:,i) = circshift(respplaid(iCell,:,i),vecshift(iCell),2); %align, but don't shift by 60 degrees
+                plaidAligned(iCell,:,i) = circshift(respplaid(iCell,:,i),vecshift(iCell),2);
             end
 
         else
             for i = 1:nMaskPhas
-                plaidAligned(iCell,:,i) = circshift(respplaid(iCell,:,i),vecshift(iCell)+(60./int),2); %align, and shift by 60 degrees
+                plaidAligned(iCell,:,i) = circshift(respplaid(iCell,:,i),vecshift(iCell)+(60./int),2);
             end
         end
     end
