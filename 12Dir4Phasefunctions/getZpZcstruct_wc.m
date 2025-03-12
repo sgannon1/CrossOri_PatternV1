@@ -1,7 +1,7 @@
 % Input is avg_resp_dir, nCells x nDir x nMaskPhase x (1: grating, 2:
 % plaid) x (1: mean resp, 2: std)
 
-function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)  
+function [ZpZcStruct] = getZpZcstruct_wc(avg_resp_dir, vmdata)  
     nCells      = size(avg_resp_dir,1);
     nStimDir    = size(avg_resp_dir,2);
     nMaskPhas   = size(avg_resp_dir,3);
@@ -11,21 +11,38 @@ function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)
         error('Error in *getZpZcStruct.m* - Hard coded for plaids comprised of gratings at 120 degrees')
     end
 
-% Create pattern and component predictions  
+%Lets get pattern and component predictions from the cycle average responses  
 
-    component   = avg_resp_dir(:,:,1,1,1)+circshift(avg_resp_dir(:,:,1,1,1),-120./int,2); % component prediction, shift grating resp 120deg and add
-    pattern     = circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);    % pattern prediction, shift grating resp 60deg
+    
+    lf1s = getlin_sum(vmdata);
+    %this computes the mean F1 of linear predicted sum of the component gratings,
+    %phase shifted to generate predicted plaid responses from component
+    %gratings
+    
+    % we will then feed these in to our component predictions
+    
+    %lf1s = nCells x 48 (one linear prediction for each phase)
+    component = lf1s;
+    pattern = avg_resp_dir(:,:,1,1,1); %assumes that for a pattern cell,...
+    %the response to the plaid is the same as the response to the grating
 
-% Compute partial correlations   
+    
+    % Compute partial correlations   
     comp_corr       = zeros(nMaskPhas,nCells);
     patt_corr       = zeros(nMaskPhas,nCells);
     comp_patt_corr  = zeros(nMaskPhas,nCells);
 
+    m = 1:length(vmdata(2,1).oris); %1:48 (12 oris for each phase)
+    
     for iCell = 1:nCells
         for ip = 1:nMaskPhas
-            comp_corr(ip,iCell)         = triu2vec(corrcoef(avg_resp_dir(iCell,:,ip,2,1),component(iCell,:)));
+            
+            start_idx = (ip - 1) * 12 + 1; %just tells us where to index into lf1s
+            plinds = m(start_idx : start_idx + 11); %(e.g., 1:12, 13:24, etc....)
+            
+            comp_corr(ip,iCell)         = triu2vec(corrcoef(avg_resp_dir(iCell,:,ip,2,1),component(iCell,plinds)));
             patt_corr(ip,iCell)         = triu2vec(corrcoef(avg_resp_dir(iCell,:,ip,2,1),pattern(iCell,:)));
-            comp_patt_corr(ip,iCell)    = triu2vec(corrcoef(component(iCell,:),pattern(iCell,:)));
+            comp_patt_corr(ip,iCell)    = triu2vec(corrcoef(component(iCell,plinds),pattern(iCell,:)));
         end
     end
     Rp = ((patt_corr)-(comp_corr.*comp_patt_corr))./sqrt((1-comp_corr.^2).*(1-comp_patt_corr.^2));
@@ -59,8 +76,3 @@ function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)
     ZpZcStruct.CDSind_all       = CDSind_all;
 
 end
-
-
-
-
-
