@@ -13,8 +13,14 @@ function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)
 
 % Create pattern and component predictions  
 
-    component   = avg_resp_dir(:,:,1,1,1)+circshift(avg_resp_dir(:,:,1,1,1),-120./int,2); % component prediction, shift grating resp 120deg and add
-    pattern     = circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);    % pattern prediction, shift grating resp 60deg
+    %component   = avg_resp_dir(:,:,1,1,1)+circshift(avg_resp_dir(:,:,1,1,1),-120./int,2); % component prediction, shift grating resp 120deg and add
+    %pattern     = circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);    % pattern prediction, shift grating resp 60deg
+    
+    %for whole-cell data
+    component = circshift(avg_resp_dir(:,:,1,1,1),+60./int,2)+circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);
+    pattern = avg_resp_dir(:,:,1,1,1);
+
+
 
 % Compute partial correlations   
     comp_corr       = zeros(nMaskPhas,nCells);
@@ -57,6 +63,8 @@ function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)
     ZpZcStruct.CDSind_byphase   = CDSind_byphase;
     ZpZcStruct.PDSind_all       = PDSind_all;
     ZpZcStruct.CDSind_all       = CDSind_all;
+    ZpZcStruct.component_pred   = component; %predictions, for plotting on tuning curves
+    ZpZcStruct.pattern_pred     = pattern; %predictions, for plotting on tuning curves
 
 end
 
