@@ -2,9 +2,9 @@
 % where both grating and plaid tuning curves are aligned to "preferred"
 % grating
 
-function plotPolarTuning4Phase(gratAligned, plaidAligned, iCell, plot_type)
+function plotPolarTuning4Phase(gratAligned, plaidAligned, iCell, phases, plot_type)
     
-    if nargin < 4
+    if nargin < 5
         plot_type = '';
     end
 
@@ -22,10 +22,11 @@ function plotPolarTuning4Phase(gratAligned, plaidAligned, iCell, plot_type)
             polarplot([x_rad x_rad(1)], [gratAligned(iCell,:) gratAligned(iCell,1)],'k', 'LineWidth',3.5)
         end
     else
-        for im = 1:4
-            polarplot([x_rad x_rad(1)], [plaidAligned(iCell,:,im) plaidAligned(iCell,1,im)],'Color',colors(im,:), 'LineWidth',3.5)
+        figure(555+iCell)
+        for phase = phases
+            polarplot([x_rad x_rad(1)], [plaidAligned(iCell,:,phase) plaidAligned(iCell,1,phase)],'Color',colors(phase,:), 'LineWidth',4.5)
             hold on
         end
-        polarplot([x_rad x_rad(1)], [gratAligned(iCell,:) gratAligned(iCell,1)],'k', 'LineWidth',3.5)
+        polarplot([x_rad x_rad(1)], [gratAligned(iCell,:) gratAligned(iCell,1)],'k', 'LineWidth',4.5)
     end
 end
