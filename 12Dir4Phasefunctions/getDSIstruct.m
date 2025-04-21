@@ -25,14 +25,21 @@ function [DSIstruct] = getDSIstruct(avg_resp_dir)
         
         xm = (sum(amps.*cos(deg2rad(1*angs)))/sum(amps)); %mean of the response, x
         ym = (sum(amps.*sin(deg2rad(1*angs)))/sum(amps)); %mean of the response, y
+
+        xm_ori = sum(cos(deg2rad(2 * angs)) .* amps);
+        ym_ori = sum(sin(deg2rad(2 * angs)) .* amps);
+        g_osi(j) = sqrt(xm_ori^2 + ym_ori^2) / sum(amps);
         
-        ang(j) = rad2deg(atan(ym/xm)); %preferred direction, in degrees
+        ang_dir(j) = rad2deg(atan(ym/xm)); %preferred direction, in degrees
+        ang_ori(j) = mod(0.5 * rad2deg(atan2(vec_y_ori, vec_x_ori)), 180); %preferred orientation, in degrees
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       
-    DSIstruct.DSI       = DSI;  % DSI value, ranging 0 to 1
-    DSIstruct.DS_ind    = find(DSI>0.5);    % index of cells meeting criteria DSI>0.5
-    DSIstruct.prefDir   = DSI_maxInd;   % index of preferred direction, ranging 1 through nDir
-    DSIstruct.gDSI      = g_dsi; %global DSI value, from 0 to 1
-    DSIstruct.gDSI_prefDir = ang; %preferred direction, calculated from gDSI
+    DSIstruct.DSI           = DSI;  % DSI value, ranging 0 to 1
+    DSIstruct.DS_ind        = find(DSI>0.5);    % index of cells meeting criteria DSI>0.5
+    DSIstruct.prefDir       = DSI_maxInd;   % index of preferred direction, ranging 1 through nDir
+    DSIstruct.gDSI          = g_dsi;    %global DSI value, from 0 to 1
+    DSIstruct.gDSI_prefDir  = ang_dir;  %preferred direction, calculated from gDSI
+    DSIstruct.gOSI          = g_osi;    %global DSI value, from 0 to 1
+    DSIstruct.gOSI_prefDir  = ang_ori;  %preferred direction, calculated from gDSI
 end
