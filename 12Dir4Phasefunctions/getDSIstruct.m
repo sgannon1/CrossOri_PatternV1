@@ -31,7 +31,7 @@ function [DSIstruct] = getDSIstruct(avg_resp_dir)
         g_osi(j) = sqrt(xm_ori^2 + ym_ori^2) / sum(amps);
         
         ang_dir(j) = rad2deg(atan(ym/xm)); %preferred direction, in degrees
-        ang_ori(j) = mod(0.5 * rad2deg(atan2(vec_y_ori, vec_x_ori)), 180); %preferred orientation, in degrees
+        ang_ori(j) = mod(0.5 * rad2deg(atan2(ym_ori, xm_ori)), 180); %preferred orientation, in degrees
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       
