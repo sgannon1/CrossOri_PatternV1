@@ -15,11 +15,16 @@ function plotPolarTuning4Phase(gratAligned, plaidAligned, iCell, phases, plot_ty
 
     if strcmp(plot_type, 'separate') %this just allows us to either plot the responses separately or together on the same figure
         figure(555+iCell)
+        plaid_max = max(plaidAligned(iCell,:,:), [], 'all');
+        grat_max = max(gratAligned(iCell,:), [], 'all');
+        max_r = max(plaid_max, grat_max);
         for im = 1:4
             subplot(1,4, im)
             polarplot([x_rad x_rad(1)], [plaidAligned(iCell,:,im) plaidAligned(iCell,1,im)],'Color',colors(im,:), 'LineWidth',3.5)
             hold on
             polarplot([x_rad x_rad(1)], [gratAligned(iCell,:) gratAligned(iCell,1)],'k', 'LineWidth',3.5)
+            ax = gca;
+            ax.RLim = [0 max_r];
         end
     else
         figure(555+iCell)
