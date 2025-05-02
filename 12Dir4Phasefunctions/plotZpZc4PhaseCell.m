@@ -14,13 +14,8 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
     plot_type = lower(plot_type);
 
 
-%    if nargin < 4
-%        plot_type = '';
-=======
-    % figure(655 + iCell)
-    for im = 1:nPhas
-        scatter(Zc(im,iCell), Zp(im,iCell),sz,colors(im,:),'filled')
-        hold on
+    if nargin < 4
+        plot_type = '';
     end
 
     if strcmp(plot_type, 'separate')
