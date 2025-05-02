@@ -16,23 +16,25 @@ function [DSIstruct] = getDSIstruct(avg_resp_dir)
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %Global DSI
+    %Global DSI & Global OSI
     angs = 0:30:330;
     
     for j = 1:nCells
         amps = avg_resp_dir(j,:,1,1,1); %our responses   
+        
         g_dsi(j) = sqrt( sum(sin(1*angs*pi/180).*amps).^2 + sum(cos(1*angs*pi/180).*amps).^2)/sum(amps);
+        g_osi(j) = sqrt(sum(sin(2*angs*pi/180).*amps).^2 + sum(cos(2*angs*pi/180).*amps).^2)/sum(amps);
         
-        xm = (sum(amps.*cos(deg2rad(1*angs)))/sum(amps)); %mean of the response, x
-        ym = (sum(amps.*sin(deg2rad(1*angs)))/sum(amps)); %mean of the response, y
-
-        xm_ori = sum(cos(deg2rad(2 * angs)) .* amps);
-        ym_ori = sum(sin(deg2rad(2 * angs)) .* amps);
-        g_osi(j) = sqrt(xm_ori^2 + ym_ori^2) / sum(amps);
+        xm_dsi = (sum(amps.*cos(deg2rad(1*angs)))/sum(amps)); %mean of the response, x
+        ym_dsi = (sum(amps.*sin(deg2rad(1*angs)))/sum(amps)); %mean of the response, y
+        xm_osi = (sum(amps.*cos(deg2rad(2*angs)))/sum(amps));
+        ym_osi = (sum(amps.*sin(deg2rad(2*angs)))/sum(amps));
         
-        ang_dir(j) = rad2deg(atan(ym/xm)); %preferred direction, in degrees
-        ang_ori(j) = mod(0.5 * rad2deg(atan2(ym_ori, xm_ori)), 180); %preferred orientation, in degrees
+        ang_dsi(j) = rad2deg(atan(ym_dsi/xm_dsi)); %preferred direction, in degrees
+        ang_osi(j) = (rad2deg(atan(ym_osi/xm_osi)));
+        ang_osi(j) = ang_osi(j)/2;
     end
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
       
     DSIstruct.DSI           = DSI;  % DSI value, ranging 0 to 1
@@ -41,5 +43,6 @@ function [DSIstruct] = getDSIstruct(avg_resp_dir)
     DSIstruct.gDSI          = g_dsi;    %global DSI value, from 0 to 1
     DSIstruct.gDSI_prefDir  = ang_dir;  %preferred direction, calculated from gDSI
     DSIstruct.gOSI          = g_osi;    %global DSI value, from 0 to 1
-    DSIstruct.gOSI_prefDir  = ang_ori;  %preferred direction, calculated from gDSI
+    DSIstruct.gOSI_prefDir  = ang_osi;  %preferred direction, calculated from gDSI
+
 end
