@@ -41,7 +41,7 @@ function [DSIstruct] = getDSIstruct(avg_resp_dir)
     DSIstruct.DS_ind        = find(DSI>0.5);    % index of cells meeting criteria DSI>0.5
     DSIstruct.prefDir       = DSI_maxInd;   % index of preferred direction, ranging 1 through nDir
     DSIstruct.gDSI          = g_dsi;    %global DSI value, from 0 to 1
-    DSIstruct.gDSI_prefDir  = ang_dir;  %preferred direction, calculated from gDSI
+    DSIstruct.gDSI_prefDir  = ang_dsi;  %preferred direction, calculated from gDSI
     DSIstruct.gOSI          = g_osi;    %global DSI value, from 0 to 1
     DSIstruct.gOSI_prefDir  = ang_osi;  %preferred direction, calculated from gDSI
 
