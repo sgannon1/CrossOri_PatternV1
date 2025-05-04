@@ -4,8 +4,8 @@
 
 function plotPolarTuning4Phase(gratAligned, plaidAligned, iCell, phases, plot_type)
     
-    if nargin < 5
-        plot_type = '';
+    if nargin < 4   % If only the first three inputs, assume all phases are plotted
+        plot_type = 'default';
     end
 
     x       = -150:30:180;
@@ -26,12 +26,18 @@ function plotPolarTuning4Phase(gratAligned, plaidAligned, iCell, phases, plot_ty
             ax = gca;
             ax.RLim = [0 max_r];
         end
-    else
+    elseif strcmp(plot_type,'together')
         figure(555+iCell)
         for phase = phases
             polarplot([x_rad x_rad(1)], [plaidAligned(iCell,:,phase) plaidAligned(iCell,1,phase)],'Color',colors(phase,:), 'LineWidth',4.5)
             hold on
         end
         polarplot([x_rad x_rad(1)], [gratAligned(iCell,:) gratAligned(iCell,1)],'k', 'LineWidth',4.5)
+    elseif strcmp(plot_type,'default')
+        for im = 1:4
+        polarplot([x_rad x_rad(1)], [plaidAligned(iCell,:,im) plaidAligned(iCell,1,im)],'Color',colors(im,:))
+        hold on
+        end
+        polarplot([x_rad x_rad(1)], [gratAligned(iCell,:) gratAligned(iCell,1)],'k', 'LineWidth',2) 
     end
 end

@@ -16,9 +16,11 @@ function plotZpZc4PhasePopulation(ZpZcStruct, resp_ind, sz, example_cell, plot_t
     0, 0, 0;         %black
     ] / 255;
 
-    if nargin < 5
-        plot_type = '';
-    
+    if nargin < 4
+        plot_type = 'default';
+    end
+
+    if strcmp(plot_type, 'default')
         figure; 
         movegui('center')
         for phaseIdx = 1:4

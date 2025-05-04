@@ -15,7 +15,7 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
 
 
     if nargin < 4
-        plot_type = '';
+        plot_type = 'default';
     end
 
     if strcmp(plot_type, 'separate')
@@ -29,11 +29,10 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
             xlabel('Zc'); xlim([-4 8]);
             plotZcZpBorders; set(gca,'TickDir','out'); axis square
         end
-    else
+    elseif strcmp(plot_type, 'together')
         figure
         for j = 1:ncells
             subplot(ncells, 1, j)
-        
             for im = 1:nPhas
                 scatter(Zc(im,iCell(j)), Zp(im,iCell(j)),sz,colors(im,:),'filled')
                 hold on
@@ -42,5 +41,16 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
             xlabel('Zc'); xlim([-4 8]);
             plotZcZpBorders; set(gca,'TickDir','out'); axis square
         end
+    else strcmp(plot_type, 'default')
+        for j = 1:ncells        
+            for im = 1:nPhas
+                scatter(Zc(im,iCell(j)), Zp(im,iCell(j)),sz,colors(im,:),'filled')
+                hold on
+            end
+            ylabel('Zp'); ylim([-4 8]);
+            xlabel('Zc'); xlim([-4 8]);
+            plotZcZpBorders; set(gca,'TickDir','out'); axis square
+        end
+    end
     end
 end
