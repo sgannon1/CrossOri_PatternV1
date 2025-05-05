@@ -5,6 +5,11 @@
 %plot_type spceifies whether you would like separate figures or a single figure with subplots for each cell
 
 function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
+
+    if nargin < 4 || isempty(plot_type)
+        plot_type = 'default';
+    end
+
     Zp      = ZpZcStruct.Zp;
     Zc      = ZpZcStruct.Zc;
     nPhas   = size(Zp,1);
@@ -12,11 +17,6 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
     colors  = getColors;
     ncells = length(iCell);
     plot_type = lower(plot_type);
-
-
-    if nargin < 4
-        plot_type = 'default';
-    end
 
     if strcmp(plot_type, 'separate')
         for j = 1:ncells
@@ -41,7 +41,7 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
             xlabel('Zc'); xlim([-4 8]);
             plotZcZpBorders; set(gca,'TickDir','out'); axis square
         end
-    else strcmp(plot_type, 'default')
+    elseif strcmp(plot_type, 'default')
         for j = 1:ncells        
             for im = 1:nPhas
                 scatter(Zc(im,iCell(j)), Zp(im,iCell(j)),sz,colors(im,:),'filled')
@@ -51,6 +51,5 @@ function plotZpZc4PhaseCell(ZpZcStruct, iCell, sz, plot_type)
             xlabel('Zc'); xlim([-4 8]);
             plotZcZpBorders; set(gca,'TickDir','out'); axis square
         end
-    end
     end
 end
