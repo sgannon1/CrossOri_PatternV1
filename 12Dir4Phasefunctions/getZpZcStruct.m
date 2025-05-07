@@ -1,7 +1,12 @@
 % Input is avg_resp_dir, nCells x nDir x nMaskPhase x (1: grating, 2:
 % plaid) x (1: mean resp, 2: std)
 
-function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)  
+function [ZpZcStruct] = getZpZcStruct(avg_resp_dir, data_type)  
+
+    if nargin < 2 || isempty(data_type)
+        data_type = 'whole_cell';
+    end
+
     nCells      = size(avg_resp_dir,1);
     nStimDir    = size(avg_resp_dir,2);
     nMaskPhas   = size(avg_resp_dir,3);
@@ -12,15 +17,13 @@ function [ZpZcStruct] = getZpZcStruct(avg_resp_dir)
     end
 
 % Create pattern and component predictions  
-
-    %component   = avg_resp_dir(:,:,1,1,1)+circshift(avg_resp_dir(:,:,1,1,1),-120./int,2); % component prediction, shift grating resp 120deg and add
-    %pattern     = circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);    % pattern prediction, shift grating resp 60deg
-    
-    %for whole-cell data
-    component = circshift(avg_resp_dir(:,:,1,1,1),+60./int,2)+circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);
-    pattern = avg_resp_dir(:,:,1,1,1);
-
-
+    if strcmp(data_type, 'alignedTestDir')
+        component   = avg_resp_dir(:,:,1,1,1)+circshift(avg_resp_dir(:,:,1,1,1),-120./int,2); % component prediction, shift grating resp 120deg and add
+        pattern     = circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);    % pattern prediction, shift grating resp 60deg
+    elseif strcmp(data_type, 'whole_cell')
+        component = circshift(avg_resp_dir(:,:,1,1,1),+60./int,2)+circshift(avg_resp_dir(:,:,1,1,1),-60./int,2);
+        pattern = avg_resp_dir(:,:,1,1,1);
+    end
 
 % Compute partial correlations   
     comp_corr       = zeros(nMaskPhas,nCells);
