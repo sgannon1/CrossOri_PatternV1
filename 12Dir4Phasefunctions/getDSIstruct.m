@@ -6,11 +6,14 @@ function [DSIstruct] = getDSIstruct(avg_resp_dir)
     nCells  = size(avg_resp_dir,1);
     nDir    = size(avg_resp_dir,2);
     for iCell = 1:nCells
-        [max_val max_ind]   = max(avg_resp_dir(iCell,:,1,1,1));
+        resp = squeeze(avg_resp_dir(iCell,:,1,1,1));
+        resp(resp < 0) = 0;
+        [max_val, max_ind] = max(resp);
         null_ind            = max_ind+(nDir./2);
-        null_ind(find(null_ind>nDir)) = null_ind(find(null_ind>nDir))-nDir;
-        min_val     = avg_resp_dir(iCell,null_ind,1,1,1);
-        if min_val < 0; min_val = 0; end
+        if null_ind > nDir
+            null_ind = null_ind - nDir;
+        end
+        min_val     = resp(null_ind);
         DSI(iCell)          = (max_val-min_val)./(max_val+min_val);
         DSI_maxInd(iCell)   = max_ind; 
     end

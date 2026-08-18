@@ -11,8 +11,8 @@ function plotZpZc4PhasePopulation(ZpZcStruct, resp_ind, sz, example_cell, plot_t
 
     colors = [
     160, 160, 160;   %light grey
-    70, 130, 180;    %blue
-    25, 100, 25;       %dark green
+    150, 40, 90;     %pink
+    0, 120, 120;     %teal
     0, 0, 0;         %black
     ] / 255;
 
@@ -26,18 +26,20 @@ function plotZpZc4PhasePopulation(ZpZcStruct, resp_ind, sz, example_cell, plot_t
         for phaseIdx = 1:4
             for i = 1:4
                 subplot(4,4,i + (phaseIdx-1)*4) % Compute correct subplot index
-                scatter(Zc(i,resp_ind), Zp(i,resp_ind),sz, colors(1,:),"filled",'MarkerEdgeColor',[1 1 1],'linewidth', 1.5)
+                scatter(Zc(i,resp_ind), Zp(i,resp_ind),sz, colors(1,:),"filled",'MarkerEdgeColor',[1 1 1],'linewidth', 0.25)
                 hold on
-                scatter(Zc(i,PDSind{phaseIdx}), Zp(i,PDSind{phaseIdx}),sz, colors(2,:),"filled",'MarkerEdgeColor',[1 1 1],'linewidth', 1.5);
-                scatter(Zc(i,CDSind{phaseIdx}), Zp(i,CDSind{phaseIdx}),sz, colors(3,:),"filled",'MarkerEdgeColor',[1 1 1],'linewidth', 1.5);
+                scatter(Zc(i,intersect(CDSind{phaseIdx},resp_ind)), Zp(i,intersect(CDSind{phaseIdx},resp_ind)),sz, colors(3,:),"filled",'MarkerEdgeColor',[1 1 1],'linewidth', 0.25);
+                scatter(Zc(i,intersect(PDSind{phaseIdx},resp_ind)), Zp(i,intersect(PDSind{phaseIdx},resp_ind)),sz, colors(2,:),"filled",'MarkerEdgeColor',[1 1 1],'linewidth', 0.25);
                 xlabel('Zc')
                 ylabel('Zp')
                 ylim([-4 8])
                 xlim([-4 8])
+                axis square
                 if i == 1
                     title(['Pattern cells at ', num2str(phases(phaseIdx))]);
                 end
                 plotZcZpBorders
+                set(gca,'TickDir','out')
             end
         end
     elseif strcmp(plot_type, 'example')
